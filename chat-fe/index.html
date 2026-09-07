@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko" class="h-full bg-slate-900 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Tutor - 채팅</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Marked.js for Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Highlight.js for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="h-full flex flex-col antialiased selection:bg-indigo-500 selection:text-white bg-slate-950">
+
+    <!-- Global Navigation Header -->
+    <header class="bg-slate-900/80 backdrop-blur border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="index.html" class="flex items-center space-x-2 text-indigo-400 font-bold text-lg hover:text-indigo-300 transition">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <span>AI Learning Tutor</span>
+                </a>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium">
+                    FastAPI + Gemini
+                </span>
+            </div>
+
+            <nav id="authNav" class="flex items-center space-x-3 text-sm">
+                <!-- Dynamically injected by setupNavbar() -->
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Left Sidebar: Chat Sessions -->
+        <aside class="w-72 bg-slate-900 border-r border-slate-800 flex flex-col flex-shrink-0 z-10">
+            <!-- New Chat Button -->
+            <div class="p-3 border-b border-slate-800">
+                <button onclick="createNewSession()" 
+                        class="w-full py-2.5 px-3 bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 hover:text-white font-medium rounded-xl flex items-center justify-center space-x-2 transition shadow-sm">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>새 대화 시작</span>
+                </button>
+            </div>
+
+            <!-- Sessions List Container -->
+            <div class="flex-1 overflow-y-auto p-2 space-y-1 custom-scrollbar" id="sessionsList">
+                <div class="text-center py-8 text-slate-500 text-sm" id="sessionsLoading">
+                    <i class="fa-solid fa-spinner fa-spin mr-1"></i> 목록 로딩 중...
+                </div>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="p-3 border-t border-slate-800 bg-slate-950/50 text-xs text-slate-500 flex items-center justify-between">
+                <div class="flex items-center space-x-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>AI Engine Connected</span>
+                </div>
+                <span class="font-mono text-slate-400">Gemini</span>
+            </div>
+        </aside>
+
+        <!-- Main Chat Workspace -->
+        <section class="flex-1 flex flex-col bg-slate-950 overflow-hidden relative">
+            <!-- Chat Top Bar -->
+            <div class="h-12 border-b border-slate-800/80 px-6 flex items-center justify-between bg-slate-900/40 backdrop-blur">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono" id="currentSessionBadge">새 세션</span>
+                    <h2 class="text-sm font-semibold text-slate-200 truncate max-w-md" id="currentSessionTitle">새로운 대화</h2>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="clearCurrentChatView()" title="화면 비우기" class="p-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition">
+                        <i class="fa-solid fa-eraser"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Scroll Container -->
+            <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 custom-scrollbar" id="messagesContainer">
+                
+                <!-- Empty State / Welcome Hero -->
+                <div id="welcomeHero" class="max-w-2xl mx-auto text-center my-12 space-y-6">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white text-3xl mx-auto shadow-xl shadow-amber-500/20">
+                        <i class="fa-solid fa-helmet-safety"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-2">건설 안전 & 시공 전문 AI 튜터</h3>
+                        <p class="text-slate-400 text-sm max-w-md mx-auto">
+                            산업안전보건법, 중대재해처벌법, 콘크리트/골조 시공 지침, 현장 용어 및 AI/SW 기술에 대해 무엇이든 물어보세요!
+                        </p>
+                    </div>
+
+                    <!-- Quick Prompt Chips -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-w-lg mx-auto text-left text-xs">
+                        <button onclick="sendQuickPrompt('건설 현장 개구부 및 고소 작업 시 추락 재해 예방 조치와 안전시설물 설치 기준을 알려줘.')"
+                                class="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-800/80 text-slate-300 transition text-left">
+                            <div class="font-semibold text-amber-400 mb-1">🏗️ 산업안전 & 추락 방지</div>
+                            <span>고소작업 안전수칙 및 법적 기준</span>
+                        </button>
+                        <button onclick="sendQuickPrompt('동절기 콘크리트 타설 시 초기 동결 방지를 위한 온도 관리와 양생 기준은 뭐야?')"
+                                class="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-800/80 text-slate-300 transition text-left">
+                            <div class="font-semibold text-amber-400 mb-1">📐 콘크리트 시공 & 양생</div>
+                            <span>시공 품질 관리 지침 알아보기</span>
+                        </button>
+                        <button onclick="sendQuickPrompt('대화 로그를 DB에 저장하고 사용자 기준으로 조회/추적하는 파이프라인 구조를 설명해줘.')"
+                                class="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/50 hover:bg-slate-800/80 text-slate-300 transition text-left">
+                            <div class="font-semibold text-indigo-400 mb-1">🗄️ 대화 로그 & DB 적재</div>
+                            <span>SQLite 로그 영속화 및 추적</span>
+                        </button>
+                        <button onclick="sendQuickPrompt('FastAPI 비동기 스트리밍(SSE)과 Gemma 4 AI API 연동 파이프라인 원리를 알려줘.')"
+                                class="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/50 hover:bg-slate-800/80 text-slate-300 transition text-left">
+                            <div class="font-semibold text-indigo-400 mb-1">🚀 FastAPI & AI 파이프라인</div>
+                            <span>실시간 토큰 스트리밍 구조</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Messages will be injected here -->
+            </div>
+
+            <!-- Timeout/Error Warning Banner (Hidden by default) -->
+            <div id="errorBanner" class="hidden mx-6 mb-2 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-300 text-xs flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-triangle-exclamation text-red-400"></i>
+                    <span id="errorBannerText">현재 응답이 지연되고 있어요. 잠시 후 다시 시도해 주세요. (error: AI_TIMEOUT)</span>
+                </div>
+                <button onclick="document.getElementById('errorBanner').classList.add('hidden')" class="text-red-400 hover:text-red-200">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Chat Input Footer -->
+            <div class="p-4 bg-slate-900/90 border-t border-slate-800 backdrop-blur">
+                <div class="max-w-4xl mx-auto relative">
+                    <form id="chatForm" onsubmit="handleChatSubmit(event)" class="relative flex items-end bg-slate-950 border border-slate-800 rounded-2xl shadow-lg focus-within:border-indigo-500 transition">
+                        <textarea id="chatInput" rows="1" maxlength="2000" required
+                                  placeholder="질문을 입력하세요... (Enter로 전송, Shift+Enter로 줄바꿈)"
+                                  oninput="autoResizeTextarea(this)"
+                                  onkeydown="handleKeyDown(event)"
+                                  class="w-full py-3.5 pl-4 pr-24 bg-transparent text-slate-100 placeholder-slate-500 text-sm resize-none focus:outline-none max-h-40 custom-scrollbar"></textarea>
+                        
+                        <div class="absolute right-2 bottom-2 flex items-center space-x-2">
+                            <span id="charCounter" class="text-[10px] text-slate-500 font-mono hidden sm:inline">0/2000</span>
+                            <button type="submit" id="sendBtn"
+                                    class="w-9 h-9 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl flex items-center justify-center shadow-md shadow-indigo-600/30 transition disabled:opacity-40 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-paper-plane text-xs"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-2 text-[11px] text-slate-500">
+                        AI 튜터는 유익한 개발 지식을 제공하며, 대화 내용은 평가 및 품질 개선을 위해 SQLite DB에 안전하게 기록됩니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Global Toast Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/chat.js"></script>
+</body>
+</html>
