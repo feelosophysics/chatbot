@@ -216,3 +216,22 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Node / Frontend dependencies & builds
+node_modules/
+dist/
+.next/
+out/
+.vercel
+
