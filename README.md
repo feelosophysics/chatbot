@@ -25,15 +25,14 @@
 ### 1. 백엔드 실행 (`chat-be`)
 ```bash
 cd chat-be
-python -m venv venv
-# Windows:
-.\venv\Scripts\activate
-# Linux/macOS:
-source venv/bin/activate
-
-pip install -r requirements.txt
 cp .env.example .env
-uvicorn app.main:app --reload --port 8000
+
+# uv 기반 초고속 가상환경 생성 및 의존성 설치
+uv venv
+uv pip install -r requirements.txt
+
+# uv run으로 가상환경 수동 활성화 없이 바로 실행
+uv run uvicorn app.main:app --reload --port 8000
 ```
 - API Swagger 문서: `http://localhost:8000/docs`
 
@@ -49,11 +48,11 @@ python -m http.server 3000
 
 ## 🧪 테스트 및 진단
 ```bash
-# 백엔드 단위 테스트 스위트
+# 백엔드 단위 테스트 스위트 (uv run)
 cd chat-be
-pytest tests/ -v
+uv run pytest tests/ -v
 
-# DB 적재 로그 및 레이턴시 진단 CLI
-python scripts/check_logs.py
+# DB 적재 로그 및 레이턴시 진단 CLI (uv run)
+uv run python scripts/check_logs.py
 ```
 
