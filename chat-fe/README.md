@@ -42,5 +42,6 @@ Vercel에서 Framework Other, 빌드 없음, Output루트(.)로 배포합니다.
 | feelosophysics (alzznd) / FE 구현·통합 | 초기 정적 클라이언트, 인증·API 연동, 현장노트 UI, 모델·추론·검색·Temperature 옵션, 오류/출처 표시, 모바일 팝오버와 배포 문서 |
 | dolphin1404 (Kyumin Lee) / 감독 | PR 템플릿 작성, 리뷰·통합 관리 담당 |
 | bwmin / BE 인증 | 닉네임·비밀번호 정책과 변경 API 및 테스트. FE는 해당 API와 연결 |
+| heeyoung35 / BE AI·채팅 | AI 연동·응답 스트리밍(SSE)·대화 문맥 유지 영역 담당. FE는 해당 채팅 API와 연결 |
 
 alzznd와 feelosophysics는 같은 작성자입니다. BE 인증·DB·AI의 구현과 실행 환경 변수는 [BE README](https://github.com/cocoa7-1/chat-be/blob/main/README.md), DB 확인은 [로그 가이드](https://github.com/cocoa7-1/chat-be/blob/main/docs/roles/log_db_guide.md)를 참고하세요.
