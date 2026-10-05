@@ -1,0 +1,27 @@
+{
+  "purpose": "Evaluation monorepo; original repositories remain development and deployment sources.",
+  "snapshot_date_kst": "2026-10-05",
+  "integration": "git subtree merge without squash; original commit authors and ancestry preserved",
+  "components": {
+    "chat-be": {
+      "repository": "https://github.com/cocoa7-1/chat-be",
+      "branch": "main",
+      "commit": "3847bba40226eb5d99b788d79a9f7b1fbb14497e",
+      "tree": "09ae2396ca4c9bb8976dff8026f685d54fefe242",
+      "verified_ec2_deployment_commit": "ddb5f3ecfec50fb93ba4236824cec9f5a561f766",
+      "changes_since_verified_deployment": ["README.md: include heeyoung35 chat owner"],
+      "pull_requests": ["https://github.com/cocoa7-1/chat-be/pull/10", "https://github.com/cocoa7-1/chat-be/pull/8", "https://github.com/cocoa7-1/chat-be/pull/11", "https://github.com/cocoa7-1/chat-be/pull/12"]
+    },
+    "chat-fe": {
+      "repository": "https://github.com/cocoa7-1/chat-fe",
+      "branch": "main",
+      "commit": "11d00c6a5963f74572084f295867885617dd97e7",
+      "tree": "8da1c4f9a26efbd04706382e858905b1ad0e5d21",
+      "verified_production_before_document_update": "fc71df23ff2ed6219ba8335689936a9cc3ec2c91",
+      "changes_since_verified_deployment": ["README.md: include heeyoung35 chat owner"],
+      "pull_requests": ["https://github.com/cocoa7-1/chat-fe/pull/2", "https://github.com/cocoa7-1/chat-fe/pull/3", "https://github.com/cocoa7-1/chat-fe/pull/4", "https://github.com/cocoa7-1/chat-fe/pull/5"]
+    }
+  },
+  "service": "https://b7-1-chat-fe.vercel.app",
+  "api_docs": "https://b71chatbe.ddns.net/docs"
+}
