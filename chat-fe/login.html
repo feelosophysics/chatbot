@@ -1,127 +1,197 @@
 <!DOCTYPE html>
-<html lang="ko" class="h-full bg-slate-900 text-slate-100">
-<head>
+<!-- HTML은 화면의 구조를 정합니다. 태그는 구역/버튼/입력칸을 뜻하고 class는 CSS 모양, id는 JS가 찾는 -->
+<!-- 이름입니다. -->
+<!-- 주석은 브라우저 화면에는 표시되지 않지만 페이지 소스에는 보이므로 비밀을 적지 않습니다. CSS는 모양, -->
+<!-- JavaScript는 클릭/요청 동작을 맡습니다. -->
+<html lang="ko">
+  <!-- 화면에 직접 보이지 않는 문서 정보와 스타일/라이브러리를 연결합니다. viewport는 모바일 화면 폭에 맞추는 -->
+  <!-- 설정입니다. -->
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인 - AI Learning Tutor</title>
-    <!-- TailwindCSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome CDN -->
+    <meta name="theme-color" content="#142e25">
+    <meta name="description" content="건설의 질문을 이해하기 쉬운 지식으로. 현장노트 건설 지식 AI 어시스턴트.">
+    <title>
+      로그인 · 현장노트
+    </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="css/style.css">
-</head>
-<body class="h-full flex flex-col antialiased selection:bg-indigo-500 selection:text-white bg-slate-950">
-
-    <!-- Global Navigation Header -->
-    <header class="bg-slate-900/80 backdrop-blur border-b border-slate-800 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <a href="index.html" class="flex items-center space-x-2 text-indigo-400 font-bold text-lg hover:text-indigo-300 transition">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <span>AI Learning Tutor</span>
-                </a>
-                <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium">
-                    FastAPI + Gemini
-                </span>
-            </div>
-
-            <nav id="authNav" class="flex items-center space-x-3 text-sm">
-                <a href="login.html" class="px-4 py-1.5 rounded-lg bg-slate-800 text-white transition">
-                    로그인
-                </a>
-                <a href="register.html" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium shadow-md shadow-indigo-600/30 transition">
-                    회원가입
-                </a>
-            </nav>
+  </head>
+  <!-- 브라우저에 실제로 표시되는 영역입니다. 아래 id를 바꾸면 해당 요소를 찾는 JavaScript도 함께 확인해야 -->
+  <!-- 합니다. -->
+  <body data-page="auth" class="auth-page ">
+    <section class="auth-story" aria-label="현장노트 소개">
+      <a class="brand" href="index.html" aria-label="현장노트 홈">
+        <span class="brand-mark" aria-hidden="true">
+          N
+        </span>
+        <span>
+          <span class="brand-title">
+            현장노트
+          </span>
+          <span class="brand-sub" style="display:block">
+            FIELDNOTE · CONSTRUCTION
+          </span>
+        </span>
+      </a>
+      <div class="auth-story-main">
+        <div class="eyebrow">
+          CONSTRUCTION KNOWLEDGE, SIMPLIFIED
         </div>
-    </header>
-
-    <!-- Main Content Area -->
-    <main class="flex-1 flex items-center justify-center p-4">
-        <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl backdrop-blur">
-            <div class="text-center mb-8">
-                <div class="w-14 h-14 rounded-2xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center text-2xl mx-auto mb-3">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <h1 class="text-2xl font-bold text-white">로그인</h1>
-                <p class="text-slate-400 text-sm mt-1">AI/SW 챗봇 서비스에 접속하세요</p>
-            </div>
-
-            <form id="loginForm" class="space-y-5" onsubmit="handleLogin(event)">
-                <div>
-                    <label for="username" class="block text-sm font-medium text-slate-300 mb-1.5">아이디</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        <input type="text" id="username" name="username" required
-                               class="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                               placeholder="아이디를 입력하세요">
-                    </div>
-                </div>
-
-                <div>
-                    <label for="password" class="block text-sm font-medium text-slate-300 mb-1.5">비밀번호</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
-                            <i class="fa-solid fa-key"></i>
-                        </div>
-                        <input type="password" id="password" name="password" required
-                               class="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                               placeholder="비밀번호를 입력하세요">
-                    </div>
-                </div>
-
-                <div id="errorMessage" class="hidden p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center space-x-2">
-                    <i class="fa-solid fa-circle-exclamation flex-shrink-0"></i>
-                    <span id="errorText"></span>
-                </div>
-
-                <button type="submit" id="submitBtn"
-                        class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center space-x-2 disabled:opacity-50">
-                    <span>로그인</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </form>
-
-            <div class="mt-6 pt-6 border-t border-slate-800 text-center text-sm text-slate-400">
-                아직 계정이 없으신가요? 
-                <a href="register.html" class="text-indigo-400 hover:text-indigo-300 font-medium ml-1">회원가입하기</a>
-            </div>
+        <h1>
+          현장의 질문을,
+          <br>
+          <span>
+            나만의 지식으로.
+          </span>
+        </h1>
+        <p>
+          건설을 배우는 가장 좋은 시작은 질문입니다.
+          <br>
+          낯선 개념을 이해하고, 대화를 기록하며
+          <br>
+          나의 지식을 한 장씩 쌓아가세요.
+        </p>
+        <div class="auth-topics">
+          <span>
+            자재와 구조
+          </span>
+          <span>
+            시공과 공정
+          </span>
+          <span>
+            계약과 용어
+          </span>
         </div>
+      </div>
+      <svg class="plan-art" viewBox="0 0 220 190" fill="none" aria-hidden="true">
+        <g stroke="#819873" stroke-width="1">
+          <path d="M23 30h174v125H23zM27 34h166v117H27z"/>
+          <path d="M95 34v67H27m68 0h44v50m0-57h54M95 67h98M57 101v50"/>
+          <path d="M95 84a17 17 0 0 0 17 17m-17-17h17v17M139 114a20 20 0 0 0 20-20m-20 20V94h20"/>
+          <path d="M36 41h43v16H36zM36 60h43v16H36zM155 106h29v36h-29zM104 112h25v30h-25z"/>
+          <path d="M13 30v125m-4-125h8m-8 125h8M23 171h174m-174-4v8m174-8v8" stroke-dasharray="2 3"/>
+          <path d="M15 13h17m-8-8v16M187 169h23m-11-11v23"/>
+        </g>
+        <g fill="#819873" font-family="monospace" font-size="6">
+          <text x="104" y="48">
+            FIELD NOTE / 01
+          </text>
+          <text x="53" y="90">
+            KNOWLEDGE
+          </text>
+          <text x="102" y="180">
+            1 : 100
+          </text>
+        </g>
+        <rect x="164" y="44" width="21" height="14" fill="#ccd6b5" opacity=".4"/>
+        <circle cx="44" cy="128" r="6" stroke="#a8b880"/>
+        <path d="m203 12 2 7h-4l2-7z" fill="#8ca477"/>
+        <path d="M203 19v10" stroke="#8ca477"/>
+      </svg>
+      <div class="auth-story-footer">
+        <span>
+          FIELDNOTE
+        </span>
+        <span>
+          한 번의 질문, 한 장의 지식.
+        </span>
+      </div>
+    </section>
+    <!-- 이 화면의 핵심 작업 영역입니다. 로그인/채팅/기록 중 해당 페이지의 기능을 담습니다. -->
+    <main class="auth-main" id="mainContent">
+      <div class="mobile-brand">
+        <a class="brand" href="index.html" aria-label="현장노트 홈">
+          <span class="brand-mark" aria-hidden="true">
+            N
+          </span>
+          <span>
+            <span class="brand-title">
+              현장노트
+            </span>
+            <span class="brand-sub" style="display:block">
+              FIELDNOTE · CONSTRUCTION
+            </span>
+          </span>
+        </a>
+      </div>
+      <div class="auth-top">
+        처음 방문하셨나요?
+        <a href="register.html">
+          회원가입
+        </a>
+      </div>
+      <div class="auth-card">
+        <div class="eyebrow">
+          WELCOME BACK
+        </div>
+        <h2>
+          다시 만나 반가워요
+        </h2>
+        <p class="auth-description">
+          지난 대화를 이어가거나, 새로운 질문을 남겨보세요.
+        </p>
+        <!-- 입력을 묶어 제출하는 폼입니다. onsubmit의 JS 함수가 기본 이동을 막고 API 요청을 보냅니다. -->
+        <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-field">
+            <label for="username">
+              아이디
+            </label>
+            <!-- name/id/type과 길이 조건이 입력의 역할을 정합니다. 브라우저 검사에 더해 서버에서도 같은 -->
+            <!-- 조건을 검사합니다. -->
+            <input id="username" name="username" autocomplete="username" required minlength="3" maxlength="30" placeholder="아이디를 입력하세요">
+          </div>
+          <div class="form-field">
+            <label for="password">
+              비밀번호
+            </label>
+            <div class="input-wrap">
+              <!-- name/id/type과 길이 조건이 입력의 역할을 정합니다. 브라우저 검사에 더해 서버에서도 -->
+              <!-- 같은 조건을 검사합니다. -->
+              <input id="password" name="password" type="password" autocomplete="current-password" required  placeholder="비밀번호를 입력하세요">
+              <button type="button" class="password-toggle" onclick="togglePassword('password',this)" aria-label="비밀번호 표시" aria-pressed="false">
+                <i class="fa-regular fa-eye" aria-hidden="true">
+                </i>
+              </button>
+            </div>
+          </div>
+          <div id="errorMessage" class="form-error hidden" role="alert">
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true">
+            </i>
+            <span id="errorText">
+            </span>
+          </div>
+          <button id="submitBtn" class="button auth-submit" type="submit">
+            <span>
+              로그인
+            </span>
+            <i class="fa-solid fa-arrow-right" aria-hidden="true">
+            </i>
+          </button>
+        </form>
+        <p class="auth-bottom-note">
+          아이디와 비밀번호로 나의 대화 기록을 이어갑니다.
+          <br>
+          처음이라면 회원가입으로 시작하세요.
+        </p>
+      </div>
+      <footer class="auth-footer">
+        © 2026 FIELDNOTE · 건설 지식 AI 어시스턴트
+      </footer>
     </main>
-
-    <!-- Global Toast Container -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
-
-    <script src="js/config.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            setupNavbar(false);
-        });
+    <div id="toast-container" class="toast-container" role="status" aria-live="polite">
+    </div>
+    <!-- 스크립트는 적힌 순서대로 연결됩니다. 공통 설정/도구를 먼저 읽고 페이지 전용 코드가 이를 사용합니다. -->
+    <script src="js/config.js">
     </script>
-</body>
+    <!-- 스크립트는 적힌 순서대로 연결됩니다. 공통 설정/도구를 먼저 읽고 페이지 전용 코드가 이를 사용합니다. -->
+    <script src="js/api.js">
+    </script>
+    <!-- 스크립트는 적힌 순서대로 연결됩니다. 공통 설정/도구를 먼저 읽고 페이지 전용 코드가 이를 사용합니다. -->
+    <script src="js/ui.js">
+    </script>
+    <!-- 스크립트는 적힌 순서대로 연결됩니다. 공통 설정/도구를 먼저 읽고 페이지 전용 코드가 이를 사용합니다. -->
+    <script src="js/auth.js">
+    </script>
+  </body>
 </html>
